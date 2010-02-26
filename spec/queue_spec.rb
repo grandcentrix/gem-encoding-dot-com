@@ -106,6 +106,13 @@ describe "Encoding.com Queue facade" do
     end
   end
 
+  describe "calling status_report to retreive additional status details" do
+    it "should parse progress properly" do
+      expect_response_xml("<response><status>New</status><progress>99.3</progress></response>")      
+      @facade.status_report("mediaid").progress.should == 99
+    end
+  end
+
   describe "calling get media list method" do
     it "should include an action node with 'GetMediaList'" do
       expect_xml_with_xpath("/query/action[text()='GetMediaList']")
@@ -228,6 +235,11 @@ describe "Encoding.com Queue facade" do
       expect_xml_with_xpath("/query/format/destination[text()='http://example.com']")
       format = EncodingDotCom::Format.create("output" => "flv")
       @facade.add(stub("source"), {"http://example.com" => format})
+    end
+    
+    it "should allow setting arbitrary nodes (like notify)" do
+      expect_xml_with_xpath("/query/notify[text()='testURL']")
+      @facade.add("http://example.com/", {}, {'notify' => 'testURL'})
     end
   end
 

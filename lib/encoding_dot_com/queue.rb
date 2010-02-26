@@ -24,8 +24,8 @@ module EncodingDotCom
     #
     # +source+:: the source url
     # +formats+:: a hash of destination urls => format objects
-    def add_and_process(source, formats={})
-      add_request("AddMedia", source, formats)
+    def add_and_process(source, formats={}, opts={})
+      add_request("AddMedia", source, formats, opts)
     end
 
     # Add a video/image to the encoding.com queue to be encoded in
@@ -33,8 +33,8 @@ module EncodingDotCom
     #
     # +source+:: the source url
     # +formats+:: a hash of destination urls => format objects
-    def add(source, formats={})
-      add_request("AddMediaBenchmark", source, formats)
+    def add(source, formats={}, opts={})
+      add_request("AddMediaBenchmark", source, formats, opts)
     end
 
     # Returns the status string of a particular media item in the
@@ -51,6 +51,14 @@ module EncodingDotCom
       response = make_request("GetStatus") do |q|
         q.mediaid media_id
       end
+    end
+    
+    # Returns a MediaStatusReport object containing the status properties of 
+    # an entry in the encoding.com queue (much like full_status, but processed 
+    # for easy accessibility) rather than a raw nokogiri document dump).
+    def status_report(media_id)
+      response = make_request("GetStatus") {|q| q.mediaid media_id }
+      MediaStatusReport.new( response )
     end
     
     # Returns a list of media in the encoding.com queue
@@ -90,10 +98,13 @@ module EncodingDotCom
 
     private
 
-    def add_request(action, source, formats)
+    def add_request(action, source, formats, opts={})
       response = make_request(action) do |q|
         q.source source
         formats.each {|url, format| format.build_xml(q, url) }
+        opts.each do |tag, value|
+          q.send tag, value 
+        end
       end
       media_id = response.xpath("/response/MediaID").text
       media_id.to_i if media_id
