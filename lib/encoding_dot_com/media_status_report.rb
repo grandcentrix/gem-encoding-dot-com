@@ -20,15 +20,17 @@ module EncodingDotCom
       @file_size = (node / "filesize").text.to_i
       @notify_url = (node / "notifyurl").text
 
-      @created = parse_time_node(node / "created")
-      @started = parse_time_node(node / "started")
-      @finished = parse_time_node(node / "finished")
-      @downloaded = parse_time_node(node / "downloaded")      
+      # Different xpath to handle multiple created nodes in document (e.g. in format sections)
+      @created = parse_time_node(node.xpath('response/created'))
+      @started = parse_time_node(node.xpath('response/started'))
+      @finished = parse_time_node(node.xpath('response/finished'))
+      @downloaded = parse_time_node(node.xpath('response/downloaded'))
     end
 
     private
 
     def parse_time_node(node)
+      node = node.is_a?(Array) ? node.first : node
       time_elements = ParseDate.parsedate(node.text)
       Time.local *time_elements unless time_elements.all? {|e| e.nil? || e == 0 }
     end

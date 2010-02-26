@@ -126,9 +126,12 @@ describe "Encoding.com Queue facade" do
     #   <processor>RACKSPACE</processor>
     #   <time_left>0</time_left>
     #   <progress>100.0</progress>
+    #   <format>
+    #     <created>otherTime</created>
+    #   </format>
     # </response>
     it "should parse everything properly" do
-      expect_response_xml("<response><id>101</id><userid>100</userid><sourcefile>sourceURL</sourcefile><status>Finished</status><notifyurl>notifyURL</notifyurl><created>2010-02-26 15:29:55</created><started>2010-02-26 15:30:31</started><finished>2010-02-26 15:30:48</finished><downloaded>2010-02-26 15:30:07</downloaded><filesize>4399104</filesize><processor>RACKSPACE</processor><time_left>0</time_left><progress>100.0</progress></response>")
+      expect_response_xml("<response><id>101</id><userid>100</userid><sourcefile>sourceURL</sourcefile><status>Finished</status><notifyurl>notifyURL</notifyurl><created>2010-02-26 15:29:55</created><started>2010-02-26 15:30:31</started><finished>2010-02-26 15:30:48</finished><downloaded>2010-02-26 15:30:07</downloaded><filesize>4399104</filesize><processor>RACKSPACE</processor><time_left>0</time_left><progress>100.0</progress><format><created>otherTime</created></format></response>")
       r = @facade.status_report("mediaid")
       r.progress.should == 100
       r.time_left.should == 0
