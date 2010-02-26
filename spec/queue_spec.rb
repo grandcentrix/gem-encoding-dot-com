@@ -111,6 +111,34 @@ describe "Encoding.com Queue facade" do
       expect_response_xml("<response><status>New</status><progress>99.3</progress></response>")      
       @facade.status_report("mediaid").progress.should == 99
     end
+
+    # <response>
+    #   <id>101</id>
+    #   <userid>100</userid>
+    #   <sourcefile>sourceURL</sourcefile>
+    #   <status>Finished</status>
+    #   <notifyurl>notifyURL</notifyurl>
+    #   <created>2010-02-26 15:29:55</created>
+    #   <started>2010-02-26 15:30:31</started>
+    #   <finished>2010-02-26 15:30:48</finished>
+    #   <downloaded>2010-02-26 15:30:07</downloaded>
+    #   <filesize>4399104</filesize>
+    #   <processor>RACKSPACE</processor>
+    #   <time_left>0</time_left>
+    #   <progress>100.0</progress>
+    # </response>
+    it "should parse everything properly" do
+      expect_response_xml("<response><id>101</id><userid>100</userid><sourcefile>sourceURL</sourcefile><status>Finished</status><notifyurl>notifyURL</notifyurl><created>2010-02-26 15:29:55</created><started>2010-02-26 15:30:31</started><finished>2010-02-26 15:30:48</finished><downloaded>2010-02-26 15:30:07</downloaded><filesize>4399104</filesize><processor>RACKSPACE</processor><time_left>0</time_left><progress>100.0</progress></response>")
+      r = @facade.status_report("mediaid")
+      r.progress.should == 100
+      r.time_left.should == 0
+      r.status.should == 'Finished'
+      r.notify_url.should == 'notifyURL'
+      r.created.should == Time.local(2010, 02, 26, 15, 29, 55)
+      r.started.should < r.finished
+      r.source_file.should == 'sourceURL'
+      r.processor.should == 'RACKSPACE'
+    end
   end
 
   describe "calling get media list method" do

@@ -5,7 +5,7 @@ module EncodingDotCom
   # Represents the full status response of a video or image in the encoding.com queue
   class MediaStatusReport
     attr_reader :source_file, :media_id, :status, :created, :started, :finished, :downloaded,
-                :file_size, :processor, :time_left, :progress
+                :file_size, :processor, :time_left, :progress, :notify_url
 
     # Creates a MediaListItem, given a <media> Nokogiri::XML::Node
     #
@@ -18,6 +18,8 @@ module EncodingDotCom
       @time_left = (node / "time_left").text.to_i
       @progress = (node / "progress").text.to_i
       @file_size = (node / "filesize").text.to_i
+      @notify_url = (node / "notifyurl").text
+
       @created = parse_time_node(node / "created")
       @started = parse_time_node(node / "started")
       @finished = parse_time_node(node / "finished")
