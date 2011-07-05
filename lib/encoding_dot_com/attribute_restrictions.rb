@@ -57,6 +57,9 @@ module EncodingDotCom
   module AttributeRestrictionsIphone #:nodoc:
   end
   
+  module AttributeRestrictionsIpad #:nodoc:
+  end
+  
   module AttributeRestrictionsAppletv #:nodoc:
   end
 
