@@ -112,6 +112,7 @@ module EncodingDotCom
     
     def make_request(action_name, &block)
       query = build_query(action_name, &block)
+      puts "Query: #{query}"
       response = @http.post(ENDPOINT, :xml => query)
       raise AvailabilityError.new unless response.code == "200"
       puts "Response Body: #{response.body}"
