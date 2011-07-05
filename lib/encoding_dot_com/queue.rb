@@ -114,7 +114,9 @@ module EncodingDotCom
       query = build_query(action_name, &block)
       response = @http.post(ENDPOINT, :xml => query)
       raise AvailabilityError.new unless response.code == "200"
+      puts "Response Body: #{response.body}"
       xml = Nokogiri::XML(response.body)
+      puts "XML: #{xml.inspect}"
       check_for_response_errors(xml)
       xml
     end
@@ -132,6 +134,7 @@ module EncodingDotCom
     
     def check_for_response_errors(xml)
       errors = xml.xpath("/response/errors/error").map {|e| e.text }
+      puts "Errors: #{errors.inspect}"
       raise MessageError.new(errors.join(", ")) unless errors.empty?
     end
   end
