@@ -45,19 +45,22 @@ module EncodingDotCom
       response.xpath("/response/status").text
     end
     
+    # Returns the progress of the media item queue.
     def progress(media_id)
       response = make_request("GetStatus") {|q| q.mediaid media_id }
       response.xpath("/response/progress").text
     end
     
+    # Returns the descriptions of all formats. They may contain usefull error information.
     def format_descriptions(media_id)
       response = make_request("GetStatus") {|q| q.mediaid media_id }
       response.xpath("//format//description").collect {|n| n.text}
     end
 
+    # Returns the first description of all formats. This may contain usefull error information.
     def format_description(media_id)
       response = make_request("GetStatus") {|q| q.mediaid media_id }
-      response.at_xpath("//format//description")
+      response.at_xpath("//format//description").text
     end
 
     # Returns the full status of an entry in the encoding.com queue,
