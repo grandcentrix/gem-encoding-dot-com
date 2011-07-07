@@ -62,6 +62,12 @@ module EncodingDotCom
       response = make_request("GetStatus") {|q| q.mediaid media_id }
       response.at_xpath("//format//description").text
     end
+    
+    # Returns the description of the media item. This may contain usefull error information.
+    def media_description(media_id)
+      response = make_request("GetStatus") {|q| q.mediaid media_id }
+      response.at_xpath("//response//description").text
+    end
 
     # Returns the full status of an entry in the encoding.com queue,
     # including details about the status of individual formats
