@@ -50,12 +50,12 @@ module EncodingDotCom
       response.xpath("/response/progress").text
     end
     
-    def format_descriptions
+    def format_descriptions(media_id)
       response = make_request("GetStatus") {|q| q.mediaid media_id }
       response.xpath("//format//description")
     end
 
-    def format_description
+    def format_description(media_id)
       response = make_request("GetStatus") {|q| q.mediaid media_id }
       response.at_xpath("format description")
     end
