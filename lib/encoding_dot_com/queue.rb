@@ -52,12 +52,12 @@ module EncodingDotCom
     
     def format_descriptions(media_id)
       response = make_request("GetStatus") {|q| q.mediaid media_id }
-      response.xpath("//format//description")
+      response.xpath("//format//description").collect {|n| n.text}
     end
 
     def format_description(media_id)
       response = make_request("GetStatus") {|q| q.mediaid media_id }
-      response.at_xpath("format description")
+      response.at_xpath("//format//description")
     end
 
     # Returns the full status of an entry in the encoding.com queue,
