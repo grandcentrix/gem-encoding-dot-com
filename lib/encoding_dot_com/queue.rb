@@ -44,6 +44,11 @@ module EncodingDotCom
       response = make_request("GetStatus") {|q| q.mediaid media_id }
       response.xpath("/response/status").text
     end
+    
+    def progress(media_id)
+      response = make_request("GetStatus") {|q| q.mediaid media_id }
+      response.xpath("/response/progress").text
+    end
 
     # Returns the full status of an entry in the encoding.com queue,
     # including details about the status of individual formats
